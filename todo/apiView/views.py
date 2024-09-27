@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import TaskSerializer
 from todo.models import Task
+from rest_framework.decorators import api_view
 
 class TaskApiView(APIView):
     def get(self,request):
@@ -21,14 +22,7 @@ class TaskApiView(APIView):
         serializer.save()
         return Response(status=status.HTTP_201_CREATED,data=serializer.data)
 
-    def changeActivate(self, request, pk):
-        task = get_object_or_404(Task, pk=pk)
-        if(task.active):
-            task.active=False
-        else:
-            task.active = True
-        task.save()
-        return Response(status=status.HTTP_200_OK, data="Se cambio de estado")
+
 
 
 class TaskDetailView(APIView):
@@ -37,3 +31,31 @@ class TaskDetailView(APIView):
         task = get_object_or_404(Task, pk=pk)
         serializer = TaskSerializer(task)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    def delete(self,request,pk):
+        try:
+            task = get_object_or_404(Task, pk=pk)
+            task.delete()
+            return Response(status=status.HTTP_200_OK, data="Se elimino correctamente")
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND,data="Esta tarea no existe")
+
+
+    # def post(self, request, pk):
+    #     task = get_object_or_404(Task, pk=pk)
+    #     if(task.active):
+    #         task.active=False
+    #     else:
+    #         task.active = True
+    #     task.save()
+    #     return Response(status=status.HTTP_200_OK, data="Se cambio de estado")
+
+@api_view(['POST'])
+def changeState(request,pk):
+    task = get_object_or_404(Task, pk=pk)
+    if(task.active):
+        task.active=False
+    else:
+        task.active = True
+    task.save()
+    return Response(status=status.HTTP_200_OK, data="Se cambio de estado")

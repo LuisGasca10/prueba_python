@@ -4,7 +4,7 @@ from django.db import models
 class Task (models.Model):
     title = models.TextField(max_length=20, verbose_name='Titulo')
     description = models.TextField(max_length=100, verbose_name='Descripción')
-    active=models.BooleanField(verbose_name= 'Activa',default=False)
+    active=models.BooleanField(verbose_name= 'Activa',default=False, blank=True)
     class Meta:
 
         verbose_name = "Tarea"
