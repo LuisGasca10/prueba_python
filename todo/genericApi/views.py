@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,UpdateAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView,ListAPIView,RetrieveAPIView
 from rest_framework.response import Response
 
 from todo.models import Task
@@ -16,12 +16,13 @@ class TaskGenericView(RetrieveUpdateDestroyAPIView):
 
 
 
-class TaskChangeState(UpdateAPIView):
+class TaskChangeState(CreateAPIView):
     serializer_class = TaskSerializer
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    # def update(self, request, *args, **kwargs):
+    #     return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def partial_update(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
+        print(kwargs)
         pk=kwargs.get('pk')
         task = get_object_or_404(Task,pk=pk)
         if(task.active):

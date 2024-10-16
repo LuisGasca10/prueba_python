@@ -10,6 +10,7 @@ from todo.apiView.serializers import TaskSerializer
 
 
 class TasksViewSet(ViewSet):
+
     def list(self, request):
         tasks=Task.objects.all()
         serializer=TaskSerializer(tasks,many=True)
@@ -50,13 +51,15 @@ class TasksViewSet(ViewSet):
             return Response(serializer.data)  # Retorna los datos actualizados
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
+    def destroy(self, request,pk,*args,**kwargs):
+        print(kwargs)
+        pk=kwargs.get('pk')
         task = get_object_or_404(Task, pk=pk)
         task.delete()
         return Response(status=204,data="Eliminado correctamente")
 
-    @action(detail=True ,methods=[HTTPMethod.POST],url_name='change-state-viewset',url_path='change')
-    def changeState(self,request,pk):
+    @action(detail=True ,methods=[HTTPMethod.POST],url_name='change-state-viewset',url_path='change/')
+    def changeState(self,request,pk,projetcPk):
         task = get_object_or_404(Task, pk=pk)
         if(task.active):
             task.active=False

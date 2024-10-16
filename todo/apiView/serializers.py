@@ -7,5 +7,5 @@ class TaskSerializer(ModelSerializer):
         fields=['title','description', 'active','id']
 
     def create(self, validated_data):
-        print(type(validated_data))
+
         return Task.objects.create(**validated_data)

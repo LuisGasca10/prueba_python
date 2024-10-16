@@ -16,11 +16,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from todo.apiViewSet.urls import router as routerViewSet
 from todo.apiModelViewSet.urls import router
 
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Documentación API TODO APP",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path(r'api/',include('todo.genericApi.urls'))
-    path('api/',include(router.urls))
+    #path(r'api/',include('todo.genericApi.urls')),
+    path('api/',include(router.urls)),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
